@@ -1,0 +1,52 @@
+<html>
+  <body>
+    <h1>Movie Recommendation App</h1>
+    <label for="genreSelect">Select Genre:</label>
+    <select id="genreSelect">
+      <option value="">All Genres</option>
+      <option value="action">Action</option>
+      <option value="comedy">Comedy</option>
+      <option value="drama">Drama</option>
+      <!-- Add more genre options as needed -->
+    </select>
+    <button onclick="getRecommendations()">Get Recommendations</button>
+    <div id="movieResults"></div>
+    <script>
+      function getRecommendations() {
+        var genreSelect = document.getElementById('genreSelect');
+        var selectedGenre = genreSelect.value;
+        var movieResults = document.getElementById('movieResults');
+        movieResults.innerHTML = 'Loading...';
+
+        var apiUrl = 'https://api.example.com/movies';
+        if (selectedGenre) {
+          apiUrl += '?genre=' + selectedGenre;
+        }
+
+        fetch(apiUrl)
+          .then(function(response) {
+            return response.json();
+          })
+          .then(function(data) {
+            var movies = data.results;
+            movieResults.innerHTML = '';
+
+            movies.forEach(function(movie) {
+              var movieElement = document.createElement('div');
+              movieElement.className = 'movie';
+              movieElement.innerHTML = '<h3>' + movie.title + '</h3>' +
+                '<p>' + movie.genre + '</p>' +
+                '<p>' + movie.releaseYear + '</p>' +
+                '<p>' + movie.description + '</p>';
+
+              movieResults.appendChild(movieElement);
+            });
+          })
+          .catch(function(error) {
+            movieResults.innerHTML = 'Error fetching movie recommendations.';
+            console.error(error);
+          });
+      }
+    </script>
+  </body>
+</html>
